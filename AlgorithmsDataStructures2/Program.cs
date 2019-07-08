@@ -10,6 +10,12 @@ namespace AlgorithmsDataStructures2
     {
         public static void Main(string[] args)
         {
+            List<int> list = new List<int>();
+            list.Add(1);
+            list.Add(3);
+
+
+            int u = list.Find(delegate (int i) { return i == 2; });
         }
     }
 }

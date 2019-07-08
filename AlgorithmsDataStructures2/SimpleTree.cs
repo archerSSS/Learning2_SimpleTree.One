@@ -50,7 +50,7 @@ namespace AlgorithmsDataStructures2
             if (Root != null)
             {
                 List<SimpleTreeNode<T>> list = new List<SimpleTreeNode<T>>();
-                list = FindAllNodes(list, Root);
+                list = CollectAllNodes(list, Root);
                 return list;
             }
 
@@ -63,7 +63,7 @@ namespace AlgorithmsDataStructures2
             if (Root != null)
             {
                 List<SimpleTreeNode<T>> list = new List<SimpleTreeNode<T>>();
-                list = FindNodesByValue(list, Root, val);
+                list = CollectNodesByValue(list, Root, val);
                 return list;
             }
 
@@ -100,24 +100,25 @@ namespace AlgorithmsDataStructures2
             return 0;
         }
 
-        private List<SimpleTreeNode<T>> FindAllNodes(List<SimpleTreeNode<T>> list, SimpleTreeNode<T> node)
+        private List<SimpleTreeNode<T>> CollectAllNodes(List<SimpleTreeNode<T>> list, SimpleTreeNode<T> node)
         {
             list.Add(node);
-            foreach (SimpleTreeNode<T> child in node.Children)
-                list = FindAllNodes(list, child);
-
+            if (node.Children != null)
+                foreach (SimpleTreeNode<T> child in node.Children)
+                    list = CollectAllNodes(list, child);
+            
             if (list.Count > 0) return list; 
             return null;
         }
         
-        private List<SimpleTreeNode<T>> FindNodesByValue(List<SimpleTreeNode<T>> list, SimpleTreeNode<T> node, T val)
+        private List<SimpleTreeNode<T>> CollectNodesByValue(List<SimpleTreeNode<T>> list, SimpleTreeNode<T> node, T val)
         {
-            if (node.NodeValue.Equals(val)) list.Add(node);
-            foreach (SimpleTreeNode<T> child in node.Children)
-                list = FindAllNodes(list, child);
-
-            if (list.Count > 0) return list;
-            return null;
+            if (node.NodeValue != null && node.NodeValue.Equals(val)) list.Add(node);
+            if (node.Children != null)
+                foreach (SimpleTreeNode<T> child in node.Children)
+                    list = CollectNodesByValue(list, child, val);
+            
+            return list;
         }
         
         private int CountNodes(List<SimpleTreeNode<T>> list)
@@ -139,7 +140,7 @@ namespace AlgorithmsDataStructures2
             {
                 int count = 1;
                 foreach (SimpleTreeNode<T> child in list)
-                    count += CountLeaf(list);
+                    count += CountLeaf(child.Children);
                 return count;
             }
             return 0;

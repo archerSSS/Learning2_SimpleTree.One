@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using AlgorithmsDataStructures2;
 
 namespace AlgoTest_1
@@ -112,7 +113,7 @@ namespace AlgoTest_1
         [TestMethod]
         public void TestDelete_A_2()
         {
-            SimpleTreeNode<int>[] nodesArray = GetNodesArray();
+            SimpleTreeNode<int>[] nodesArray = GetNodesArray_1();
             SimpleTree<int> tree = GetTree(nodesArray);
 
             tree.DeleteNode(nodesArray[5]);
@@ -142,7 +143,7 @@ namespace AlgoTest_1
         [TestMethod]
         public void TestDelete_A_3()
         {
-            SimpleTreeNode<int>[] nodesArray = GetNodesArray();
+            SimpleTreeNode<int>[] nodesArray = GetNodesArray_1();
             SimpleTree<int> tree = GetTree(nodesArray);
 
             tree.DeleteNode(nodesArray[1]);
@@ -182,11 +183,147 @@ namespace AlgoTest_1
                 }
         }
 
+        [TestMethod]
+        public void TestGetAllNodes_1()
+        {
+            SimpleTreeNode<int>[] nodes = GetNodesArray_1();
+            SimpleTree<int> tree = GetTree(nodes);
+            nodes = ChangeArrayOrder(nodes);
+            
+            List<SimpleTreeNode<int>> list = tree.GetAllNodes();
+            int index = 0;
+            foreach (SimpleTreeNode<int> node in list)
+            {
+                Assert.AreEqual(nodes[index], node);
+                index++;
+            }   
+        }
+        
+        [TestMethod]
+        public void TestGetAllNodes_2()
+        {
+            SimpleTreeNode<int> root = new SimpleTreeNode<int>(1, null);
+            SimpleTree<int> tree = new SimpleTree<int>(root);
+            
+            List<SimpleTreeNode<int>> list = tree.GetAllNodes();
+            
+            foreach (SimpleTreeNode<int> node in list)
+                Assert.AreEqual(root, node);
+        }
 
+        [TestMethod]
+        public void TestGetAllNodes_3()
+        {
+            SimpleTreeNode<int> root = new SimpleTreeNode<int>(1, null);
+            SimpleTreeNode<int> node1 = new SimpleTreeNode<int>(11, null);
+            SimpleTreeNode<int> node2 = new SimpleTreeNode<int>(12, null);
+            SimpleTreeNode<int> node3 = new SimpleTreeNode<int>(13, null);
+            SimpleTreeNode<int>[] nodes = new SimpleTreeNode<int>[]
+            {
+                root, node1, node2, node3
+            };
+
+            SimpleTree<int> tree = new SimpleTree<int>(root);
+            tree.AddChild(root, node1);
+            tree.AddChild(root, node2);
+            tree.AddChild(root, node3);
+
+            List<SimpleTreeNode<int>> list = tree.GetAllNodes();
+
+            int index = 0;
+            foreach (SimpleTreeNode<int> node in list)
+            {
+                Assert.AreEqual(nodes[index], node);
+                index++;
+            }
+                
+        }
+
+        [TestMethod]
+        public void TestFindNodesByValue_1()
+        {
+            SimpleTreeNode<int>[] nodes = GetNodesArray_2();
+            SimpleTree<int> tree = new SimpleTree<int>(nodes[0]);
+            tree.AddChild(nodes[0], nodes[1]);
+            tree.AddChild(nodes[0], nodes[2]);
+            tree.AddChild(nodes[0], nodes[3]);
+
+            List<SimpleTreeNode<int>> list = tree.FindNodesByValue(11);
+
+            foreach (SimpleTreeNode<int> node in list)
+                Assert.AreEqual(11, node.NodeValue);
+            Assert.AreEqual(2, list.Count);
+        }
+
+        [TestMethod]
+        public void TestFindNodesByValue_2()
+        {
+            SimpleTreeNode<int>[] nodes = GetNodesArray_2();
+            SimpleTree<int> tree = new SimpleTree<int>(nodes[0]);
+            tree.AddChild(nodes[0], nodes[1]);
+            tree.AddChild(nodes[1], nodes[2]);
+            tree.AddChild(nodes[2], nodes[3]);
+
+            List<SimpleTreeNode<int>> list = tree.FindNodesByValue(11);
+            
+            foreach (SimpleTreeNode<int> node in list)
+                Assert.AreEqual(11, node.NodeValue);
+            Assert.AreEqual(2, list.Count);
+        }
+
+        [TestMethod]
+        public void TestMoveNode_1()
+        {
+            SimpleTreeNode<int>[] nodes = GetNodesArray_1();
+            SimpleTree<int> tree = GetTree(nodes);
+            Assert.AreEqual(nodes[3], tree.FindNodesByValue(135).Find(
+                delegate(SimpleTreeNode<int> node) { return node.Equals(nodes[13]); }).Parent);
+            
+            tree.MoveNode(nodes[13], nodes[1]);
+            Assert.AreEqual(nodes[1], tree.FindNodesByValue(135).Find(
+                delegate (SimpleTreeNode<int> node) { return node.Equals(nodes[13]); }).Parent);
+        }
+
+        [TestMethod]
+        public void TestMoveNode_2()
+        {
+            SimpleTreeNode<int>[] nodes = GetNodesArray_1();
+            SimpleTree<int> tree = GetTree(nodes);
+
+            tree.MoveNode(nodes[6], nodes[3]);
+            tree.MoveNode(nodes[7], nodes[3]);
+            tree.MoveNode(nodes[8], nodes[3]);
+            Assert.AreEqual(nodes[3], tree.FindNodesByValue(121).Find(
+                delegate (SimpleTreeNode<int> node) { return node.Equals(nodes[6]); }).Parent);
+            Assert.AreEqual(nodes[3], tree.FindNodesByValue(122).Find(
+                delegate (SimpleTreeNode<int> node) { return node.Equals(nodes[7]); }).Parent);
+            Assert.AreEqual(nodes[3], tree.FindNodesByValue(123).Find(
+                delegate (SimpleTreeNode<int> node) { return node.Equals(nodes[8]); }).Parent);
+            Assert.AreEqual(8, tree.FindNodesByValue(13).Find(
+                delegate (SimpleTreeNode<int> node) { return node.Equals(nodes[3]); }).Children.Count);
+        }
+
+        [TestMethod]
+        public void TestCount_1()
+        {
+            SimpleTreeNode<int>[] nodes = GetNodesArray_1();
+            SimpleTree<int> tree = GetTree(nodes);
+
+            Assert.AreEqual(14, tree.Count());
+        }
+
+        [TestMethod]
+        public void TestCountLeaf_1()
+        {
+            SimpleTreeNode<int>[] nodes = GetNodesArray_1();
+            SimpleTree<int> tree = GetTree(nodes);
+
+            Assert.AreEqual(4, tree.LeafCount());
+        }
 
         // Возвращает массив узлов для класса SimpleTree<int>
         //
-        private SimpleTreeNode<int>[] GetNodesArray()
+        private SimpleTreeNode<int>[] GetNodesArray_1()
         {
             SimpleTreeNode<int>[] nodes = new SimpleTreeNode<int>[]
             {
@@ -207,6 +344,44 @@ namespace AlgoTest_1
             };
             return nodes;
         }
+
+
+        // Возвращает массив узлов для класса SimpleTree<int>
+        //
+        private SimpleTreeNode<int>[] GetNodesArray_2()
+        {
+            return new SimpleTreeNode<int>[]
+            {
+                new SimpleTreeNode<int>(10, null),
+                new SimpleTreeNode<int>(10, null),
+                new SimpleTreeNode<int>(11, null),
+                new SimpleTreeNode<int>(11, null)
+            };
+        }
+
+        // Меняет опрядок узлов массива для метода TestGetAllNodes_1()
+        //
+        private SimpleTreeNode<int>[] ChangeArrayOrder(SimpleTreeNode<int>[] nodes)
+        {
+            SimpleTreeNode<int>[] new_nodes = new SimpleTreeNode<int>[14];
+            new_nodes[0] = nodes[0];
+            new_nodes[1] = nodes[1];
+            new_nodes[2] = nodes[4];
+            new_nodes[3] = nodes[5];
+            new_nodes[4] = nodes[2];
+            new_nodes[5] = nodes[6];
+            new_nodes[6] = nodes[7];
+            new_nodes[7] = nodes[8];
+            new_nodes[8] = nodes[3];
+            new_nodes[9] = nodes[9];
+            new_nodes[10] = nodes[10];
+            new_nodes[11] = nodes[11];
+            new_nodes[12] = nodes[12];
+            new_nodes[13] = nodes[13];
+
+            return new_nodes;
+        }
+
 
         // Возвращает дерево на основе массива узлов.
         //
