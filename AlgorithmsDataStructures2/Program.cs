@@ -10,16 +10,6 @@ namespace AlgorithmsDataStructures2
     {
         public static void Main(string[] args)
         {
-            List<Int32> list = null;
-
-            int num = 0;
-            foreach (Int32 i in list)
-            {
-                num = 100;
-            }
-                
-
-
         }
     }
 }

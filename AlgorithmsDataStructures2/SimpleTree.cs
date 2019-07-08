@@ -40,13 +40,7 @@ namespace AlgorithmsDataStructures2
 
         public void DeleteNode(SimpleTreeNode<T> NodeToDelete)
         {
-            if (NodeToDelete.Parent != null && NodeToDelete.Children != null)
-            {
-                foreach (SimpleTreeNode<T> childNode in NodeToDelete.Children)
-                    childNode.Parent = NodeToDelete.Parent;
-                NodeToDelete.Parent.Children = NodeToDelete.Children;
-            }
-            else if (NodeToDelete.Parent == null) Root = null;
+            if (NodeToDelete.Parent == null) Root = null;
             else NodeToDelete.Parent.Children.Remove(NodeToDelete);
             // ваш код удаления существующего узла NodeToDelete
         }
