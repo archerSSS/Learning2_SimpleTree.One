@@ -318,7 +318,71 @@ namespace AlgoTest_1
             SimpleTreeNode<int>[] nodes = GetNodesArray_1();
             SimpleTree<int> tree = GetTree(nodes);
 
-            Assert.AreEqual(4, tree.LeafCount());
+            Assert.AreEqual(10, tree.LeafCount());
+        }
+        
+        [TestMethod]
+        public void TestCountLeaf_2()
+        {
+            SimpleTreeNode<int>[] nodes = GetNodesArray_1();
+            SimpleTree<int> tree = GetTree(nodes);
+            tree.AddChild(nodes[4], new SimpleTreeNode<int>(1111, null));
+            tree.AddChild(nodes[5], new SimpleTreeNode<int>(1121, null));
+            tree.AddChild(nodes[6], new SimpleTreeNode<int>(1211, null));
+            tree.AddChild(nodes[7], new SimpleTreeNode<int>(1221, null));
+            tree.AddChild(nodes[8], new SimpleTreeNode<int>(1231, null));
+            tree.AddChild(nodes[9], new SimpleTreeNode<int>(1311, null));
+            tree.AddChild(nodes[10], new SimpleTreeNode<int>(1321, null));
+            tree.AddChild(nodes[11], new SimpleTreeNode<int>(1331, null));
+            tree.AddChild(nodes[12], new SimpleTreeNode<int>(1341, null));
+            tree.AddChild(nodes[13], new SimpleTreeNode<int>(1351, null));
+
+            Assert.AreEqual(10, tree.LeafCount());
+        }
+
+        [TestMethod]
+        public void TestCountLeaf_3()
+        {
+            SimpleTreeNode<int> root = new SimpleTreeNode<int>(0, null);
+            SimpleTree<int> tree = new SimpleTree<int>(root);
+
+            Assert.AreEqual(1, tree.LeafCount());
+        }
+
+        [TestMethod]
+        public void TestCountLeaf_4()
+        {
+            SimpleTreeNode<int> root = new SimpleTreeNode<int>(0, null);
+            SimpleTreeNode<int> node1 = new SimpleTreeNode<int>(0, null);
+            SimpleTreeNode<int> node2 = new SimpleTreeNode<int>(0, null);
+            SimpleTreeNode<int> node3 = new SimpleTreeNode<int>(0, null);
+            SimpleTree<int> tree = new SimpleTree<int>(root);
+            tree.AddChild(root, node1);
+            tree.AddChild(root, node2);
+            tree.AddChild(root, node3);
+
+            Assert.AreEqual(3, tree.LeafCount());
+        }
+
+        [TestMethod]
+        public void TestSetLevel()
+        {
+            SimpleTreeNode<int>[] nodes = GetNodesArray_1();
+            SimpleTree<int> tree = GetTree(nodes);
+
+            tree.SetLevel();
+            List<SimpleTreeNode<int>> list = tree.GetAllNodes();
+
+            int count = 1;
+            foreach (SimpleTreeNode<int> node in list)
+            {
+                if (count == 1) Assert.AreEqual(1, node.level);
+                if (count == 2 || count == 5 || count == 9) Assert.AreEqual(2, node.level);
+                if (count  > 2 && count < 5 ||
+                        count > 5 && count < 9 || count > 9)
+                            Assert.AreEqual(3, node.level);
+                count++;
+            }
         }
 
         // Возвращает массив узлов для класса SimpleTree<int>

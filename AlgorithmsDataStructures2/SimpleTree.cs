@@ -8,6 +8,7 @@ namespace AlgorithmsDataStructures2
         public T NodeValue; // значение в узле
         public SimpleTreeNode<T> Parent; // родитель или null для корня
         public List<SimpleTreeNode<T>> Children; // список дочерних узлов или null
+        public int level;
 
         public SimpleTreeNode(T val, SimpleTreeNode<T> parent)
         {
@@ -75,10 +76,6 @@ namespace AlgorithmsDataStructures2
         {
             DeleteNode(OriginalNode);
             AddChild(NewParent, OriginalNode);
-            //OriginalNode.Parent.Children.Remove(OriginalNode);
-            //OriginalNode.Parent = NewParent;
-            //NewParent.Children.Add(OriginalNode);
-
             // ваш код перемещения узла вместе с его поддеревом -- 
             // в качестве дочернего для узла NewParent
         }
@@ -98,6 +95,27 @@ namespace AlgorithmsDataStructures2
                 return CountLeaf(Root.Children);
             // количество листьев в дереве
             return 0;
+        }
+
+        public void SetLevel()
+        {
+            if (Root != null)
+            {
+                Root.level = 1;
+                if (Root.Children != null) SetNextLevel(Root); 
+            }
+        }
+        
+        private void SetNextLevel(SimpleTreeNode<T> node)
+        {
+            if (node.Children != null)
+            {
+                foreach (SimpleTreeNode<T> child in node.Children)
+                {
+                    child.level = node.level + 1;
+                    SetNextLevel(child);
+                }
+            }
         }
 
         private List<SimpleTreeNode<T>> CollectAllNodes(List<SimpleTreeNode<T>> list, SimpleTreeNode<T> node)
@@ -138,12 +156,12 @@ namespace AlgorithmsDataStructures2
         {
             if (list != null)
             {
-                int count = 1;
+                int count = 0;
                 foreach (SimpleTreeNode<T> child in list)
                     count += CountLeaf(child.Children);
                 return count;
             }
-            return 0;
+            return 1;
         }
     }
 
