@@ -49,6 +49,7 @@ namespace AlgoTest_1
             {
                 value++;
                 Assert.AreEqual(value, node.NodeValue);
+                Assert.AreEqual(true, node.Parent != null);
             }
 
             tree.AddChild(node1, node11);
@@ -63,10 +64,11 @@ namespace AlgoTest_1
                     {
                         value++;
                         Assert.AreEqual(value, childNode.NodeValue);
+                        Assert.AreEqual(true, childNode.Parent != null);
                     }
                     value -= node.Children.Count;
                 }
-                
+                Assert.AreEqual(true, node.Parent != null);
             }
 
             tree.AddChild(node2, node21);
@@ -301,6 +303,42 @@ namespace AlgoTest_1
                 delegate (SimpleTreeNode<int> node) { return node.Equals(nodes[8]); }).Parent);
             Assert.AreEqual(8, tree.FindNodesByValue(13).Find(
                 delegate (SimpleTreeNode<int> node) { return node.Equals(nodes[3]); }).Children.Count);
+        }
+
+        // Перемещение с проверкой отсутствия на прежнем месте
+        //
+        [TestMethod]
+        public void TestMoveNode_3()
+        {
+            SimpleTreeNode<int>[] nodes = GetNodesArray_1();
+            SimpleTree<int> tree = GetTree(nodes);
+
+            Assert.AreEqual(nodes[1], tree.FindNodesByValue(111).Find(
+                delegate (SimpleTreeNode<int> node) { return node.Equals(nodes[4]); }).Parent);
+            tree.MoveNode(nodes[4], nodes[3]);
+            Assert.AreEqual(nodes[3], tree.FindNodesByValue(111).Find(
+                delegate (SimpleTreeNode<int> node) { return node.Equals(nodes[4]); }).Parent);
+
+            SimpleTreeNode<int> previous_parent =  tree.FindNodesByValue(11).Find(delegate(SimpleTreeNode<int> node) { return node.Equals(nodes[1]); });
+            foreach (SimpleTreeNode<int> node in previous_parent.Children)
+                Assert.AreEqual(false, node.Equals(nodes[4]));
+        }
+        
+        // Перемещение с проверкой присутствия всех дочерних узлов
+        //
+        [TestMethod]
+        public void TestMoveNode_4()
+        {
+            SimpleTreeNode<int>[] nodes = GetNodesArray_1();
+            SimpleTree<int> tree = GetTree(nodes);
+            
+            tree.MoveNode(nodes[1], nodes[2]);
+            SimpleTreeNode<int> new_parent = tree.FindNodesByValue(12).Find(
+                delegate(SimpleTreeNode<int> node) { return node.Equals(nodes[2]); });
+            foreach (SimpleTreeNode<int> child in new_parent.Children)
+                if (child.Equals(nodes[1]))
+                    foreach (SimpleTreeNode<int> moved_child in child.Children)
+                        Assert.AreEqual(true, moved_child.Equals(nodes[4]) || moved_child.Equals(nodes[5]));
         }
 
         [TestMethod]
