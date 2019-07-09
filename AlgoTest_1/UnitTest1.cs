@@ -273,6 +273,8 @@ namespace AlgoTest_1
             Assert.AreEqual(2, list.Count);
         }
 
+        // Перемещение одного дочернего узла в список дочерних узлов другого узла
+        //
         [TestMethod]
         public void TestMoveNode_1()
         {
@@ -283,9 +285,15 @@ namespace AlgoTest_1
             
             tree.MoveNode(nodes[13], nodes[1]);
             Assert.AreEqual(nodes[1], tree.FindNodesByValue(135).Find(
-                delegate (SimpleTreeNode<int> node) { return node.Equals(nodes[13]); }).Parent);
+                delegate(SimpleTreeNode<int> node) { return node.Equals(nodes[13]); }).Parent);
+            SimpleTreeNode<int> new_parent = tree.FindNodesByValue(11).Find(
+                delegate(SimpleTreeNode<int> node) { return node.Equals(nodes[1]); });
+            foreach (SimpleTreeNode<int> node in new_parent.Children)
+                Assert.AreEqual(true, node.Equals(nodes[4]) || node.Equals(nodes[5]) || node.Equals(nodes[13]));
         }
 
+        // Перемещение всех подузлов из одного узла в другой, оставляя первый без дочерних
+        //
         [TestMethod]
         public void TestMoveNode_2()
         {
