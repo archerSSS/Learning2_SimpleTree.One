@@ -356,6 +356,18 @@ namespace AlgoTest_1
             SimpleTree<int> tree = GetTree(nodes);
 
             Assert.AreEqual(14, tree.Count());
+
+            tree.MoveNode(nodes[13], nodes[1]);
+            tree.MoveNode(nodes[12], nodes[0]);
+            Assert.AreEqual(14, tree.Count());
+
+            // Удаляется узел не имеющий дочерних
+            tree.DeleteNode(nodes[12]);
+            Assert.AreEqual(13, tree.Count());
+
+            // Удаляется узел с тремя дочерними узлами. (До перемещения было два)
+            tree.DeleteNode(nodes[1]);
+            Assert.AreEqual(9, tree.Count());
         }
 
         [TestMethod]

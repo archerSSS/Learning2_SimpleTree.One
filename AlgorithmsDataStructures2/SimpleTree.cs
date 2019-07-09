@@ -5,9 +5,9 @@ namespace AlgorithmsDataStructures2
 {
     public class SimpleTreeNode<T>
     {
-        public T NodeValue; // значение в узле
-        public SimpleTreeNode<T> Parent; // родитель или null для корня
-        public List<SimpleTreeNode<T>> Children; // список дочерних узлов или null
+        public T NodeValue;
+        public SimpleTreeNode<T> Parent;
+        public List<SimpleTreeNode<T>> Children;
         public int level;
 
         public SimpleTreeNode(T val, SimpleTreeNode<T> parent)
@@ -20,7 +20,7 @@ namespace AlgorithmsDataStructures2
 
     public class SimpleTree<T>
     {
-        public SimpleTreeNode<T> Root; // корень, может быть null
+        public SimpleTreeNode<T> Root;
 
         public SimpleTree(SimpleTreeNode<T> root)
         {
@@ -29,21 +29,24 @@ namespace AlgorithmsDataStructures2
 
         public void AddChild(SimpleTreeNode<T> ParentNode, SimpleTreeNode<T> NewChild)
         {
-            if (Root == null) Root = NewChild;
+            if (Root == null)
+            {
+                Root = NewChild;
+                Root.level = 1;
+            }
             else
             {
                 if (ParentNode.Children == null) ParentNode.Children = new List<SimpleTreeNode<T>>();
                 ParentNode.Children.Add(NewChild);
                 NewChild.Parent = ParentNode;
+                NewChild.level = NewChild.Parent.level + 1;
             }
-            // ваш код добавления нового дочернего узла существующему ParentNode
         }
 
         public void DeleteNode(SimpleTreeNode<T> NodeToDelete)
         {
             if (NodeToDelete.Parent == null) Root = null;
             else NodeToDelete.Parent.Children.Remove(NodeToDelete);
-            // ваш код удаления существующего узла NodeToDelete
         }
 
         public List<SimpleTreeNode<T>> GetAllNodes()
@@ -54,8 +57,7 @@ namespace AlgorithmsDataStructures2
                 list = CollectAllNodes(list, Root);
                 return list;
             }
-
-            // ваш код выдачи всех узлов дерева в определённом порядке
+            return new List<SimpleTreeNode<T>>();
             return null;
         }
 
@@ -67,8 +69,7 @@ namespace AlgorithmsDataStructures2
                 list = CollectNodesByValue(list, Root, val);
                 return list;
             }
-
-            // ваш код поиска узлов по значению
+            return new List<SimpleTreeNode<T>>();
             return null;
         }
 
@@ -76,16 +77,12 @@ namespace AlgorithmsDataStructures2
         {
             DeleteNode(OriginalNode);
             AddChild(NewParent, OriginalNode);
-            // ваш код перемещения узла вместе с его поддеревом -- 
-            // в качестве дочернего для узла NewParent
         }
 
         public int Count()
         {
             if (Root != null)
                 return CountNodes(Root.Children) + 1;
-
-            // количество всех узлов в дереве
             return 0;
         }
 
@@ -93,7 +90,6 @@ namespace AlgorithmsDataStructures2
         {
             if (Root != null)
                 return CountLeaf(Root.Children);
-            // количество листьев в дереве
             return 0;
         }
 
