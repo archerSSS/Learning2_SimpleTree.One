@@ -421,6 +421,28 @@ namespace AlgoTest_1
 
             Assert.AreEqual(3, tree.LeafCount());
         }
+        
+        [TestMethod]
+        public void TestCountLeaf_5()
+        {
+            SimpleTreeNode<int>[] nodes = GetNodesArray_1();
+            SimpleTree<int> tree = GetTree(nodes);
+            for (int i = 4; i < 14; i++)
+                tree.MoveNode(nodes[i], nodes[0]);
+
+            Assert.AreEqual(13, tree.LeafCount());
+        }
+
+        [TestMethod]
+        public void TestCountLeaf_6()
+        {
+            SimpleTreeNode<int>[] nodes = GetNodesArray_1();
+            SimpleTree<int> tree = GetTree(nodes);
+            for (int i = 9; i < 14; i++)
+                tree.DeleteNode(nodes[i]);
+
+            Assert.AreEqual(6, tree.LeafCount());
+        }
 
         [TestMethod]
         public void TestSetLevel()
